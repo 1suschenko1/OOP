@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 
 class Cell {
 public:
@@ -15,7 +16,7 @@ public:
 
 class NumericCell : public Cell {
 public:
-    explicit NumericCell(double value);
+    explicit NumericCell(double value = 0.0);
     Type getType() const override;
     std::string getValue() const override;
     double getNumber() const;
@@ -27,7 +28,7 @@ private:
 
 class TextCell : public Cell {
 public:
-    explicit TextCell(const std::string& text);
+    explicit TextCell(const std::string& text = "");
     Type getType() const override;
     std::string getValue() const override;
     const std::string& getText() const;
@@ -50,4 +51,17 @@ private:
     double calculate() const;
 };
 
-#endif // TABLE_H
+class Table {
+public:
+    Table(int rows, int cols);
+    std::shared_ptr<Cell> getCell(int row, int col) const;
+    void setCell(int row, int col, std::shared_ptr<Cell> cell);
+    void printTable() const;
+
+private:
+    int rows, cols;
+    std::vector<std::vector<std::shared_ptr<Cell>>> cells;
+    void checkBounds(int row, int col) const;
+};
+
+#endif
